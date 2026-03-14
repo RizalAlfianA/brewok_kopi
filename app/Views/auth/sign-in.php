@@ -86,15 +86,23 @@
                     <h1>Aplikasi {Nama}</h1>
                     <p class="auth-subtitle mb-3">Login dengan akun anda</p>
 
-                    <form action="#">
+                    <?php if(session()->getFlashdata('error')) : ?>
+
+                    <div class="alert alert-danger">
+                    <?= session()->getFlashdata('error') ?>
+                    </div>
+
+                    <?php endif; ?>
+
+                    <form action="<?= base_url('/login/process') ?>" method="post">
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="text" class="form-control form-control-xl" placeholder="Username">
+                            <input type="email" name="email" class="form-control form-control-xl" placeholder="Email">
                             <div class="form-control-icon">
                                 <i class="bi bi-person"></i>
                             </div>
                         </div>
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="password" class="form-control form-control-xl" placeholder="Password">
+                            <input type="password" name="password" class="form-control form-control-xl" placeholder="Password">
                             <div class="form-control-icon">
                                 <i class="bi bi-shield-lock"></i>
                             </div>
