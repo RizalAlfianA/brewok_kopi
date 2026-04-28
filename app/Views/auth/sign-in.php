@@ -22,7 +22,9 @@
 
         #auth #auth-right {
             height: 100%;
-            background: url(./png/4853433.png), linear-gradient(90deg, #2d499d, #3f5491);
+            background: 
+                linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                url('<?= base_url('assets/img/Gambar2.jpeg'); ?>');
         }
 
         #auth #auth-left {
@@ -83,7 +85,7 @@
                             <img class="w-auto h-auto" src="<?= base_url('assets/img/logo/logo.png'); ?>" alt="Logo" loading="lazy">
                         </a>
                     </div>
-                    <h1>Aplikasi {Nama}</h1>
+                    <h1>Brewok Kopi</h1>
                     <p class="auth-subtitle mb-3">Login dengan akun anda</p>
 
                     <?php if(session()->getFlashdata('error')) : ?>
@@ -109,10 +111,6 @@
                         </div>
                         <button class="btn btn-primary btn-block btn-lg shadow-lg mt-2">Login</button>
                     </form>
-                    <hr>
-                    <div class="text-center fs-5 mt-5">
-                        <p>Lupa password? <a href="#" class="font-bold">Klik disini</a></p>
-                    </div>
                 </div>
             </div>
             <div class="col-lg-7 d-none d-lg-block">

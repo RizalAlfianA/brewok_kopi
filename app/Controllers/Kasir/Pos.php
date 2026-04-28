@@ -24,7 +24,7 @@ class Pos extends BaseController
 
         $data['menu'] = $this->menu->getMenuKategori();
 
-        return view('kasir/pos', $data);
+        return view('kasir/pos/index', $data);
     }
 
     public function simpan()
