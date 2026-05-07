@@ -94,6 +94,9 @@ $routes->group('owner', ['filter' => 'role:owner'], function($routes){
 
     $routes->get('laporan', 'Owner\Laporan::index');
 
+    $routes->get('laporan/exportPdf', 'Owner\Laporan::exportPdf');
+    $routes->get('laporan/exportExcel', 'Owner\Laporan::exportExcel');
+
     /*
     |--------------------------------------------------------------------------
     | USER

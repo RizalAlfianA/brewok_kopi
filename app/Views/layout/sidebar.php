@@ -8,7 +8,7 @@
                 <a href="<?= base_url(); ?>">
                     <img class="img-fluid rounded-3"
                         style="width:max-content;height:max-content;"
-                        src="<?= base_url('assets/img/logo/logo.png'); ?>"
+                        src="<?= base_url('assets/img/logo/Logo.jpeg'); ?>"
                         alt="Logo"
                         loading="lazy">
                 </a>

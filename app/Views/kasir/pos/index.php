@@ -2,85 +2,70 @@
 <?= $this->section('content'); ?>
 
 <style>
-
 .menu-card{
-cursor:pointer;
-transition:0.2s;
+    cursor:pointer;
+    transition:0.2s;
+    border:none;
+    border-radius:10px;
+    overflow:hidden;
 }
-
 .menu-card:hover{
-transform:scale(1.05);
-box-shadow:0 5px 15px rgba(0,0,0,0.2);
+    transform:scale(1.05);
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
 }
-
-.keranjang-box{
-position:sticky;
-top:20px;
+.menu-img{
+    height:120px;
+    object-fit:cover;
+    padding:8px;
+    border-radius:12px;
 }
+.menu-wrapper{ margin-top:10px; }
+.keranjang-box{ position:sticky; top:20px; }
 
+.success-icon{
+    font-size:60px;
+    color:#28a745;
+    animation:pop 0.4s ease;
+}
+@keyframes pop{
+    0%{transform:scale(0)}
+    100%{transform:scale(1)}
+}
 </style>
 
 <div class="row">
 
-<!-- ================= MENU PRODUK ================= -->
-
+<!-- MENU -->
 <div class="col-md-8">
-
 <div class="card shadow-sm">
-
 <div class="card-header bg-dark text-white">
 <h5 class="mb-0">Menu Brewok Kopi</h5>
 </div>
 
-<div class="card-body">
-
-<div class="row">
+<div class="card-body menu-wrapper">
+<div class="row g-3">
 
 <?php foreach($menu as $m): ?>
-
-<div class="col-md-3 mb-3">
-
+<div class="col-md-3">
 <div class="card menu-card text-center"
-onclick="tambahMenu(
-'<?= $m['id_menu'] ?>',
-'<?= $m['nama_menu'] ?>',
-<?= $m['harga'] ?>
-)">
-
-<img src="<?= base_url('assets/images/menu/'.$m['gambar']) ?>"
-class="card-img-top"
-style="height:120px;object-fit:cover">
-
+onclick="tambahMenu('<?= $m['id_menu'] ?>','<?= $m['nama_menu'] ?>',<?= $m['harga'] ?>)">
+<img src="<?= base_url('assets/images/menu/'.$m['gambar']) ?>" class="menu-img">
 <div class="card-body p-2">
-
 <h6 class="mb-1"><?= $m['nama_menu'] ?></h6>
-
-<span class="text-primary fw-bold">
-Rp <?= number_format($m['harga']) ?>
-</span>
-
+<span class="text-primary fw-bold">Rp <?= number_format($m['harga'],0,',','.') ?></span>
 </div>
-
 </div>
-
 </div>
-
 <?php endforeach ?>
 
 </div>
-
 </div>
 </div>
-
 </div>
 
-
-<!-- ================= KERANJANG ================= -->
-
+<!-- KERANJANG -->
 <div class="col-md-4">
-
 <div class="card keranjang-box shadow">
-
 <div class="card-header bg-success text-white">
 <h5 class="mb-0">Keranjang</h5>
 </div>
@@ -88,223 +73,195 @@ Rp <?= number_format($m['harga']) ?>
 <div class="card-body">
 
 <table class="table table-sm">
-
 <thead>
-<tr>
-<th>Menu</th>
-<th>Qty</th>
-<th>Subtotal</th>
-<th></th>
-</tr>
+<tr><th>Menu</th><th>Qty</th><th>Subtotal</th><th></th></tr>
 </thead>
-
 <tbody id="keranjang"></tbody>
-
 </table>
 
 <hr>
 
-<h5>
-Total :
-Rp <span id="total">0</span>
-</h5>
+<h5>Total : Rp <span id="total">0</span></h5>
 
-<div class="mt-3">
-
-<input type="number"
-id="bayar"
-class="form-control"
+<input type="text" id="bayar" class="form-control mt-3"
 placeholder="Uang Bayar"
-onkeyup="hitungKembalian()">
+onkeyup="formatRupiah(this); hitungKembalian()">
 
-</div>
+<h6 class="mt-3">Kembalian : Rp <span id="kembalian">0</span></h6>
 
-<h6 class="mt-3">
-
-Kembalian :
-Rp <span id="kembalian">0</span>
-
-</h6>
-
-<button
-class="btn btn-success w-100 mt-3"
-onclick="simpanTransaksi()">
-
+<button class="btn btn-success w-100 mt-3" onclick="simpanTransaksi()">
 Simpan Transaksi
-
 </button>
 
 </div>
-
+</div>
 </div>
 
 </div>
 
+<!-- STRUK -->
+<div id="struk" style="display:none; font-family: monospace; width:300px;">
+<h4 style="text-align:center;">Brewok Kopi</h4>
+<hr>
+<div id="struk-items"></div>
+<hr>
+<p>Total : Rp <span id="struk-total"></span></p>
+<p>Bayar : Rp <span id="struk-bayar"></span></p>
+<p>Kembali : Rp <span id="struk-kembali"></span></p>
+<hr>
+<p style="text-align:center;">Terima Kasih ☕</p>
 </div>
 
+<!-- MODAL -->
+<div class="modal fade" id="modalSukses">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+
+<div class="modal-body text-center">
+
+<div class="success-icon">✔</div>
+
+<h4 class="mt-3">Transaksi Berhasil</h4>
+
+<p class="mt-3">Total: Rp <span id="modal-total"></span></p>
+<p>Bayar: Rp <span id="modal-bayar"></span></p>
+<p>Kembali: Rp <span id="modal-kembali"></span></p>
+
+</div>
+
+<div class="modal-footer justify-content-center">
+<button class="btn btn-primary" onclick="cetakStrukTerakhir()">Cetak Struk 🧾</button>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- SOUND -->
+<audio id="successSound">
+<source src="https://www.soundjay.com/buttons/sounds/button-3.mp3">
+</audio>
 
 <script>
 
-let keranjang = []
-let total = 0
+let keranjang=[], total=0, lastTransaksi=null
 
 function tambahMenu(id,nama,harga){
-
-let item = keranjang.find(i=>i.id==id)
-
-if(item){
-item.qty++
-item.subtotal = item.qty * harga
-}else{
-keranjang.push({
-id:id,
-nama:nama,
-harga:harga,
-qty:1,
-subtotal:harga
-})
-}
-
+let item=keranjang.find(i=>i.id==id)
+if(item){ item.qty++; item.subtotal=item.qty*harga }
+else{ keranjang.push({id,nama,harga,qty:1,subtotal:harga}) }
 renderKeranjang()
-
 }
-
 
 function renderKeranjang(){
-
-let tbody = document.getElementById("keranjang")
+let tbody=document.getElementById("keranjang")
 tbody.innerHTML=""
-
 total=0
 
-keranjang.forEach((item,index)=>{
-
-total += item.subtotal
-
-tbody.innerHTML += `
+keranjang.forEach((item,i)=>{
+total+=item.subtotal
+tbody.innerHTML+=`
 <tr>
-
 <td>${item.nama}</td>
-
 <td>
-<button class="btn btn-sm btn-secondary"
-onclick="kurangQty(${index})">-</button>
-
+<button onclick="kurangQty(${i})">-</button>
 ${item.qty}
-
-<button class="btn btn-sm btn-secondary"
-onclick="tambahQty(${index})">+</button>
+<button onclick="tambahQty(${i})">+</button>
 </td>
-
-<td>
-Rp ${item.subtotal.toLocaleString()}
-</td>
-
-<td>
-<button class="btn btn-sm btn-danger"
-onclick="hapusItem(${index})">
-x
-</button>
-</td>
-
-</tr>
-`
-
+<td>Rp ${item.subtotal.toLocaleString('id-ID')}</td>
+<td><button onclick="hapusItem(${i})">x</button></td>
+</tr>`
 })
 
-document.getElementById("total").innerText =
-total.toLocaleString()
-
+document.getElementById("total").innerText=total.toLocaleString('id-ID')
 }
 
+function tambahQty(i){ keranjang[i].qty++; keranjang[i].subtotal=keranjang[i].qty*keranjang[i].harga; renderKeranjang() }
+function kurangQty(i){ if(keranjang[i].qty>1){ keranjang[i].qty--; keranjang[i].subtotal=keranjang[i].qty*keranjang[i].harga } renderKeranjang() }
+function hapusItem(i){ keranjang.splice(i,1); renderKeranjang() }
 
-function tambahQty(index){
-
-keranjang[index].qty++
-keranjang[index].subtotal =
-keranjang[index].qty * keranjang[index].harga
-
-renderKeranjang()
-
-}
-
-function kurangQty(index){
-
-if(keranjang[index].qty>1){
-
-keranjang[index].qty--
-
-keranjang[index].subtotal =
-keranjang[index].qty * keranjang[index].harga
-
-}
-
-renderKeranjang()
-
-}
-
-function hapusItem(index){
-
-keranjang.splice(index,1)
-
-renderKeranjang()
-
+function formatRupiah(input){
+let angka=input.value.replace(/[^,\d]/g,'')
+let sisa=angka.length%3
+let rupiah=angka.substr(0,sisa)
+let ribuan=angka.substr(sisa).match(/\d{3}/gi)
+if(ribuan){ rupiah+=(sisa?'.':'')+ribuan.join('.') }
+input.value=rupiah
 }
 
 function hitungKembalian(){
-
-let bayar =
-document.getElementById("bayar").value
-
-let kembali = bayar - total
-
-document.getElementById("kembalian").innerText =
-kembali.toLocaleString()
-
+let bayar=parseInt(document.getElementById("bayar").value.replace(/\./g,''))||0
+let kembali=bayar-total
+document.getElementById("kembalian").innerText=kembali>0?kembali.toLocaleString('id-ID'):0
 }
 
 function simpanTransaksi(){
 
-let bayar =
-document.getElementById("bayar").value
+let bayar=parseInt(document.getElementById("bayar").value.replace(/\./g,''))||0
 
-let kembalian = bayar - total
+if(keranjang.length===0) return alert("Pilih menu!")
+if(total<=0) return alert("Total tidak valid!")
+if(bayar<total) return alert("Uang kurang!")
+
+let kembalian=bayar-total
 
 fetch("/kasir/simpan-transaksi",{
-
 method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-
-total:total,
-bayar:bayar,
-kembalian:kembalian,
-items:keranjang
-
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify({ total,bayar,kembalian,items:keranjang })
 })
-
-})
-
 .then(res=>res.json())
-
 .then(res=>{
 
-alert("Transaksi berhasil")
+lastTransaksi={ items:[...keranjang], total,bayar,kembalian }
 
-keranjang=[]
+// isi modal
+document.getElementById("modal-total").innerText=total.toLocaleString('id-ID')
+document.getElementById("modal-bayar").innerText=bayar.toLocaleString('id-ID')
+document.getElementById("modal-kembali").innerText=kembalian.toLocaleString('id-ID')
 
-renderKeranjang()
+// sound
+document.getElementById("successSound").play()
 
+// tampilkan modal
+let modal=new bootstrap.Modal(document.getElementById('modalSukses'))
+modal.show()
+
+
+setTimeout(()=>modal.hide() )
+
+// reset
+keranjang=[]; total=0; renderKeranjang()
 document.getElementById("bayar").value=""
 document.getElementById("kembalian").innerText="0"
 
 })
-
 }
+
+function cetakStrukTerakhir(){
+if(!lastTransaksi) return alert("Belum ada transaksi!")
+cetakStruk(lastTransaksi)
+}
+
+function cetakStruk(data){
+let itemsHTML=""
+data.items.forEach(item=>{
+itemsHTML+=`<p>${item.nama} x${item.qty}<br>Rp ${item.subtotal.toLocaleString('id-ID')}</p>`
+})
+
+document.getElementById("struk-items").innerHTML=itemsHTML
+document.getElementById("struk-total").innerText=data.total.toLocaleString('id-ID')
+document.getElementById("struk-bayar").innerText=data.bayar.toLocaleString('id-ID')
+document.getElementById("struk-kembali").innerText=data.kembalian.toLocaleString('id-ID')
+
+let win=window.open('','','width=400,height=600')
+win.document.write(`<body onload="window.print(); window.close();">${document.getElementById("struk").innerHTML}</body>`)
+win.document.close()
+}
+
+// auto fokus
+document.getElementById('modalSukses')
+.addEventListener('hidden.bs.modal',()=>document.getElementById("bayar").focus())
 
 </script>
 

@@ -1,4 +1,4 @@
-<?= $this->extend('owner/layout/base'); ?>
+<?= $this->extend('layout/base'); ?>
 <?= $this->section('content'); ?>
 
 <form method="post" action="/owner/user/update/<?= $user['id_user'] ?>">

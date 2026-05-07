@@ -17,14 +17,14 @@
 
 <body>
     <div id="app">
-        <?= $this->include('owner/layout/sidebar'); ?>
+        <?= $this->include('layout/sidebar'); ?>
         <div id="main">
-            <?= $this->include('owner/layout/header'); ?>
+            <?= $this->include('layout/header'); ?>
 
             <div class="page-content">
                 <?= $this->renderSection('content'); ?>
             </div>
-            <?= $this->include('owner/layout/footer'); ?>
+            <?= $this->include('layout/footer'); ?>
         </div>
     </div>
     <script src="<?= base_url('assets/js/app.js'); ?>"></script>

@@ -1,46 +1,56 @@
-<?= $this->extend('owner/layout/base'); ?>
+<?= $this->extend('layout/base'); ?>
 <?= $this->section('content'); ?>
 
 <form method="get" class="row mb-3">
 
-<div class="col-md-3">
-<input type="date" name="tanggal_awal" class="form-control">
-</div>
+    <div class="col-md-3">
+        <input type="date" name="tanggal_awal" class="form-control">
+    </div>
 
-<div class="col-md-3">
-<input type="date" name="tanggal_akhir" class="form-control">
-</div>
+    <div class="col-md-3">
+        <input type="date" name="tanggal_akhir" class="form-control">
+    </div>
 
-<div class="col-md-2">
-<button class="btn btn-primary">Filter</button>
-</div>
+    <div class="col-md-2">
+        <button class="btn btn-primary">Filter</button>
+    </div>
+
+    <div class="col-md-4 text-end">
+
+        <a href="<?= base_url('owner/laporan/exportPdf?tanggal_awal=' . ($tanggal_awal ?? '') . '&tanggal_akhir=' . ($tanggal_akhir ?? '')) ?>"
+        class="btn btn-danger">
+        Export PDF
+        </a>
+
+        <a href="<?= base_url('owner/laporan/exportExcel?tanggal_awal=' . ($tanggal_awal ?? '') . '&tanggal_akhir=' . ($tanggal_akhir ?? '')) ?>" 
+        class="btn btn-success">
+        Export Excel
+        </a>
+
+    </div>
 
 </form>
 
 <table class="table table-bordered">
 
-<tr>
-<th>No</th>
-<th>Tanggal</th>
-<th>Total</th>
-</tr>
+    <tr>
+        <th>No</th>
+        <th>Tanggal</th>
+        <th>Total</th>
+    </tr>
 
-<?php $no=1; foreach($laporan as $l): ?>
+    <?php $no = 1; foreach ($laporan as $l): ?>
 
-<tr>
+    <tr>
+        <td><?= $no++ ?></td>
+        <td><?= $l['tanggal'] ?></td>
+        <td>Rp <?= number_format($l['total'], 0, ',', '.') ?></td>
+    </tr>
 
-<td><?= $no++ ?></td>
-
-<td><?= $l['tanggal'] ?></td>
-
-<td>Rp <?= number_format($l['total'],0,',','.') ?></td>
-
-</tr>
-
-<?php endforeach ?>
+    <?php endforeach; ?>
 
 </table>
 
-<h4>Total Omzet : Rp <?= number_format($total,0,',','.') ?></h4>
+<h4>Total Omzet : Rp <?= number_format($total, 0, ',', '.') ?></h4>
 
 <?= $this->endSection(); ?>

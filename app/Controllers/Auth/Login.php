@@ -14,27 +14,39 @@ class Login extends BaseController
 
     public function process()
     {
-        $session = session();
+        $session   = session();
         $userModel = new UserModel();
 
-        $email = $this->request->getPost('email');
+        $email    = $this->request->getPost('email');
         $password = $this->request->getPost('password');
 
+        // ================= VALIDASI INPUT =================
+        if (empty($email)) {
+            return redirect()->back()->with('error', 'Email belum diisi');
+        }
+
+        if (empty($password)) {
+            return redirect()->back()->with('error', 'Password belum diisi');
+        }
+
+        // ================= CEK USER =================
         $user = $userModel->where('email', $email)->first();
 
         if ($user) {
 
+            // ================= CEK PASSWORD =================
             if (password_verify($password, $user['password'])) {
 
                 $sessionData = [
-                    'id_user' => $user['id_user'],
-                    'nama' => $user['nama'],
-                    'role' => $user['role'],
+                    'id_user'   => $user['id_user'],
+                    'nama'      => $user['nama'],
+                    'role'      => $user['role'],
                     'logged_in' => true
                 ];
 
                 $session->set($sessionData);
 
+                // ================= REDIRECT ROLE =================
                 if ($user['role'] == 'admin') {
                     return redirect()->to('/admin/dashboard');
 

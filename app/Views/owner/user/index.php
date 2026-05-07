@@ -1,4 +1,4 @@
-<?= $this->extend('owner/layout/base'); ?>
+<?= $this->extend('layout/base'); ?>
 <?= $this->section('content'); ?>
 
 <a href="/owner/user/create" class="btn btn-primary mb-3">
@@ -30,8 +30,10 @@ Tambah User
 Edit
 </a>
 
-<a href="/owner/user/delete/<?= $u['id_user'] ?>" class="btn btn-danger btn-sm">
-Hapus
+<a href="/admin/menu/delete/<?= $u['id_user']; ?>" 
+   onclick="return confirm('Yakin ingin menghapus user <?= $u['nama']; ?>?')"
+   class="btn btn-danger btn-sm">
+   Hapus
 </a>
 
 </td>

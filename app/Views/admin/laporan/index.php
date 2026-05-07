@@ -1,4 +1,4 @@
-<?= $this->extend('admin/layout/base'); ?>
+<?= $this->extend('layout/base'); ?>
 <?= $this->section('content'); ?>
 
 <form method="get" class="row mb-3">

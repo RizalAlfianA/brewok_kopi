@@ -1,4 +1,4 @@
-<?= $this->extend('admin/layout/base'); ?>
+<?= $this->extend('layout/base'); ?>
 <?= $this->section('content'); ?>
 
 <a href="/admin/kategori/create" class="btn btn-primary mb-3">
@@ -28,8 +28,10 @@ Tambah Kategori
 Edit
 </a>
 
-<a href="/admin/kategori/delete/<?= $k['id_kategori'] ?>" class="btn btn-danger btn-sm">
-Hapus
+<a href="/admin/menu/delete/<?= $k['id_kategori']; ?>" 
+   onclick="return confirm('Yakin ingin menghapus kategori menu <?= $k['nama_kategori']; ?>?')"
+   class="btn btn-danger btn-sm">
+   Hapus
 </a>
 
 </td>

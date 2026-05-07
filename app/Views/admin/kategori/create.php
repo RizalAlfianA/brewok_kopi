@@ -1,4 +1,4 @@
-<?= $this->extend('admin/layout/base'); ?>
+<?= $this->extend('layout/base'); ?>
 <?= $this->section('content'); ?>
 
 <h3>Tambah Kategori</h3>

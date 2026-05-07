@@ -1,4 +1,4 @@
-<?= $this->extend('admin/layout/base'); ?>
+<?= $this->extend('layout/base'); ?>
 <?= $this->section('content'); ?>
 
 <a href="/admin/menu/create" class="btn btn-primary mb-3">
@@ -39,8 +39,10 @@ width="60">
 Edit
 </a>
 
-<a href="/admin/menu/delete/<?= $m['id_menu'] ?>" class="btn btn-danger btn-sm">
-Hapus
+<a href="/admin/menu/delete/<?= $m['id_menu']; ?>" 
+   onclick="return confirm('Yakin ingin menghapus menu <?= $m['nama_menu']; ?>?')"
+   class="btn btn-danger btn-sm">
+   Hapus
 </a>
 
 </td>

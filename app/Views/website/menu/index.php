@@ -2,216 +2,186 @@
 
 <div class="container mt-5">
 
-<div class="row">
+    <div class="row">
 
-<!-- SIDEBAR KATEGORI -->
-<div class="col-lg-3">
+        <!-- ================= SIDEBAR KATEGORI ================= -->
+        <div class="col-lg-3">
 
-<div class="card shadow-sm border-0 mb-4">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
 
-<div class="card-body">
+                    <h5 class="fw-bold mb-3">Kategori</h5>
 
-<h5 class="fw-bold mb-3">Kategori</h5>
+                    <ul class="list-group list-group-flush">
 
-<ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <a href="<?= base_url('menu') ?>" class="text-decoration-none">
+                                Semua Menu
+                            </a>
+                        </li>
 
-<li class="list-group-item">
-<a href="#" class="text-decoration-none text-dark">
-Coffee
-</a>
-</li>
+                        <?php foreach($kategori as $k): ?>
+                        <li class="list-group-item">
+                            <a href="<?= base_url('menu?kategori='.$k['id_kategori']) ?>" 
+                               class="text-decoration-none text-dark">
+                                <?= $k['nama_kategori'] ?>
+                            </a>
+                        </li>
+                        <?php endforeach ?>
 
-<li class="list-group-item">
-<a href="#" class="text-decoration-none text-dark">
-Non Coffee
-</a>
-</li>
+                    </ul>
 
-<li class="list-group-item">
-<a href="#" class="text-decoration-none text-dark">
-Snack
-</a>
-</li>
+                </div>
+            </div>
 
-</ul>
-
-</div>
-
-</div>
-
-</div>
+        </div>
 
 
-<!-- GRID MENU -->
-<div class="col-lg-9">
+        <!-- ================= GRID MENU ================= -->
+        <div class="col-lg-9">
 
-<h2 class="fw-bold mb-4">Menu Brewok Kopi</h2>
+            <h2 class="fw-bold mb-4">Menu Brewok Kopi</h2>
 
-<div class="row g-4">
+            <div class="row g-4">
 
+                <?php foreach($menu as $m): ?>
 
-<!-- ITEM MENU -->
-<div class="col-md-4">
+                <div class="col-md-4">
 
-<div class="card h-100 shadow-sm border-0">
+                    <div class="card h-100 shadow-sm border-0 menu-item"
+                         onclick="showDetail(
+                            '<?= $m['nama_menu'] ?>',
+                            '<?= number_format($m['harga'],0,',','.') ?>',
+                            '<?= $m['deskripsi'] ?>',
+                            '<?= base_url('assets/images/menu/'.$m['gambar']) ?>'
+                         )">
 
-<img
-src="https://images.unsplash.com/photo-1511920170033-f8396924c348"
-class="card-img-top"
-style="height:200px; object-fit:cover;"
->
+                        <img
+                            src="<?= base_url('assets/images/menu/'.$m['gambar']) ?>"
+                            class="card-img-top menu-img"
+                        >
 
-<div class="card-body text-center">
+                        <div class="card-body text-center">
 
-<h5 class="card-title">Espresso</h5>
+                            <h5 class="card-title">
+                                <?= $m['nama_menu'] ?>
+                            </h5>
 
-<p class="text-muted mb-0">
-Rp 15.000
-</p>
+                            <p class="text-muted mb-0">
+                                Rp <?= number_format($m['harga'],0,',','.') ?>
+                            </p>
 
-</div>
+                        </div>
 
-</div>
+                    </div>
 
-</div>
+                </div>
 
+                <?php endforeach ?>
 
-<!-- ITEM MENU -->
-<div class="col-md-4">
+            </div>
 
-<div class="card h-100 shadow-sm border-0">
+        </div>
 
-<img
-src="https://images.unsplash.com/photo-1509042239860-f550ce710b93"
-class="card-img-top"
-style="height:200px; object-fit:cover;"
->
-
-<div class="card-body text-center">
-
-<h5 class="card-title">Cappuccino</h5>
-
-<p class="text-muted mb-0">
-Rp 22.000
-</p>
-
-</div>
-
-</div>
+    </div>
 
 </div>
 
 
-<!-- ITEM MENU -->
-<div class="col-md-4">
+<!-- ================= MODAL DETAIL MENU ================= -->
+<div class="modal fade" id="modalMenu" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
 
-<div class="card h-100 shadow-sm border-0">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">Detail Menu</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
 
-<img
-src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085"
-class="card-img-top"
-style="height:200px; object-fit:cover;"
->
+            <div class="modal-body">
 
-<div class="card-body text-center">
+                <div class="row">
 
-<h5 class="card-title">Latte</h5>
+                    <!-- GAMBAR -->
+                    <div class="col-md-5 text-center">
+                        <img id="modal-gambar" class="img-fluid modal-img">
+                    </div>
 
-<p class="text-muted mb-0">
-Rp 20.000
-</p>
+                    <!-- DETAIL -->
+                    <div class="col-md-7">
 
-</div>
+                        <h4 id="modal-nama" class="fw-bold"></h4>
 
-</div>
+                        <h5 id="modal-harga" class="text-primary mb-3"></h5>
 
-</div>
+                        <p id="modal-deskripsi" class="text-muted"></p>
 
+                        <a id="btn-wa" class="btn btn-success mt-3" target="_blank">
+                            Pesan via WhatsApp
+                        </a>
 
-<!-- ITEM MENU -->
-<div class="col-md-4">
+                    </div>
 
-<div class="card h-100 shadow-sm border-0">
+                </div>
 
-<img
-src="https://images.unsplash.com/photo-1551024601-bec78aea704b"
-class="card-img-top"
-style="height:200px; object-fit:cover;"
->
+            </div>
 
-<div class="card-body text-center">
-
-<h5 class="card-title">Chocolate</h5>
-
-<p class="text-muted mb-0">
-Rp 18.000
-</p>
-
-</div>
-
-</div>
-
+        </div>
+    </div>
 </div>
 
 
-<!-- ITEM MENU -->
-<div class="col-md-4">
+<!-- ================= STYLE ================= -->
+<style>
 
-<div class="card h-100 shadow-sm border-0">
+.menu-item{
+    cursor:pointer;
+    transition:0.25s;
+}
 
-<img
-src="https://images.unsplash.com/photo-1551782450-a2132b4ba21d"
-class="card-img-top"
-style="height:200px; object-fit:cover;"
->
+.menu-item:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 20px rgba(0,0,0,0.15);
+}
 
-<div class="card-body text-center">
+.menu-img{
+    height:200px;
+    object-fit:cover;
+}
 
-<h5 class="card-title">French Fries</h5>
+.modal-img{
+    width: 100%;
+    max-height: 250px;
+    object-fit: cover;
+    border-radius: 10px;
+}
 
-<p class="text-muted mb-0">
-Rp 15.000
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- ITEM MENU -->
-<div class="col-md-4">
-
-<div class="card h-100 shadow-sm border-0">
-
-<img
-src="https://images.unsplash.com/photo-1504674900247-0877df9cc836"
-class="card-img-top"
-style="height:200px; object-fit:cover;"
->
-
-<div class="card-body text-center">
-
-<h5 class="card-title">Croissant</h5>
-
-<p class="text-muted mb-0">
-Rp 17.000
-</p>
-
-</div>
-
-</div>
-
-</div>
+</style>
 
 
-</div>
+<!-- ================= SCRIPT ================= -->
+<script>
 
-</div>
+function showDetail(nama, harga, deskripsi, gambar){
 
-</div>
+    document.getElementById("modal-nama").innerText = nama
+    document.getElementById("modal-harga").innerText = "Rp " + harga
+    document.getElementById("modal-deskripsi").innerText = deskripsi
+    document.getElementById("modal-gambar").src = gambar
 
-</div>
+    let nomor = "6283127528729"
+
+    let pesan = `Halo Brewok Kopi, saya ingin pesan ${nama}`
+
+    let url = "https://wa.me/" + nomor + "?text=" + encodeURIComponent(pesan)
+
+    document.getElementById("btn-wa").href = url
+
+    let modal = new bootstrap.Modal(document.getElementById('modalMenu'))
+    modal.show()
+}
+
+</script>
+
 
 <?= $this->include('website/layout/footer'); ?>

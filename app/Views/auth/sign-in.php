@@ -82,7 +82,7 @@
                 <div id="auth-left">
                     <div class="mb-5">
                         <a href="#">
-                            <img class="w-auto h-auto" src="<?= base_url('assets/img/logo/logo.png'); ?>" alt="Logo" loading="lazy">
+                            <img src="<?= base_url('assets/img/logo/Logo.jpeg'); ?>" alt="Logo" style="height:240px;" loading="lazy">
                         </a>
                     </div>
                     <h1>Brewok Kopi</h1>
@@ -119,7 +119,12 @@
                         <div class="card my-3 w-100">
                             <div class="card-body">
                                 <h4 class="card-title">Informasi Pengumuman</h4>
-                                <p class="card-text">Informasi tentang apapun dapat ditampilkan disini</p>
+                                <p class="card-text">
+                                    Selamat datang di sistem Brewok Kopi. Halaman login ini merupakan akses khusus bagi karyawan yang memiliki hak penggunaan sistem, seperti Owner, Admin, dan Kasir, untuk mendukung kegiatan operasional sehari-hari. 
+                                    Pastikan Anda menggunakan akun resmi yang telah diberikan dan memasukkan email serta password dengan benar.
+                                </p>
+                                <p>Demi menjaga keamanan data, harap tidak membagikan informasi login kepada pihak lain yang tidak berkepentingan. 
+                                    Apabila Anda mengalami kendala saat login atau terdapat masalah pada akun, silakan menghubungi Owner sebagai penanggung jawab dan pengguna. Informasi penting terkait operasional, pembaruan sistem, maupun pengumuman lainnya akan disampaikan melalui halaman ini.</p>
                             </div>
                         </div>
                     </div>
