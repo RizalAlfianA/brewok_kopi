@@ -16,7 +16,7 @@
 
                 <span class="d-flex align-items-center gap-1">
                     <i data-feather="clock"></i>
-                    13.30 - 01.30 
+                    13.00 - 01.00 
                 </span>
 
                 <span class="d-flex align-items-center gap-1">

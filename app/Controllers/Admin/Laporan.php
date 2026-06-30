@@ -7,7 +7,6 @@ use App\Models\PesananModel;
 
 class Laporan extends BaseController
 {
-
     protected $pesanan;
 
     public function __construct()
@@ -17,30 +16,40 @@ class Laporan extends BaseController
 
     public function index()
     {
-        $data = [
-            'title' => 'Laporan Penjualan'
-        ];
-
-        $tanggal_awal = $this->request->getGet('tanggal_awal');
+        $tanggal_awal  = $this->request->getGet('tanggal_awal');
         $tanggal_akhir = $this->request->getGet('tanggal_akhir');
+
+        // ================= FILTER LAPORAN =================
 
         if ($tanggal_awal && $tanggal_akhir) {
 
-            $data['laporan'] = $this->pesanan
+            $laporan = $this->pesanan
                 ->where('DATE(tanggal) >=', $tanggal_awal)
                 ->where('DATE(tanggal) <=', $tanggal_akhir)
+                ->orderBy('tanggal', 'DESC')
                 ->findAll();
 
         } else {
 
-            $data['laporan'] = $this->pesanan
-                ->orderBy('tanggal','DESC')
+            $laporan = $this->pesanan
+                ->orderBy('tanggal', 'DESC')
                 ->findAll();
         }
 
-        $data['total'] = array_sum(array_column($data['laporan'], 'total'));
+        // ================= TOTAL OMZET =================
+
+        $total = array_sum(array_column($laporan, 'total'));
+
+        // ================= DATA VIEW =================
+
+        $data = [
+            'title'           => 'Laporan Penjualan',
+            'laporan'         => $laporan,
+            'total'           => $total,
+            'tanggal_awal'    => $tanggal_awal,
+            'tanggal_akhir'   => $tanggal_akhir
+        ];
 
         return view('admin/laporan/index', $data);
     }
-
 }

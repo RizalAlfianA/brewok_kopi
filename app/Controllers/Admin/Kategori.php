@@ -17,10 +17,10 @@ class Kategori extends BaseController
     public function index()
     {
         $data = [
-            'title' => 'Kategori Menu'
+            'title'     => 'Kategori Menu',
+            'kategori'  => $this->kategori->findAll()
         ];
 
-        $data['kategori'] = $this->kategori->findAll();
         return view('admin/kategori/index', $data);
     }
 
@@ -40,7 +40,10 @@ class Kategori extends BaseController
 
     public function edit($id)
     {
-        $data['kategori'] = $this->kategori->find($id);
+        $data = [
+            'kategori' => $this->kategori->find($id)
+        ];
+
         return view('admin/kategori/edit', $data);
     }
 
@@ -56,6 +59,7 @@ class Kategori extends BaseController
     public function delete($id)
     {
         $this->kategori->delete($id);
+
         return redirect()->to('/admin/kategori');
     }
 }

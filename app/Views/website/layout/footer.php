@@ -64,7 +64,7 @@
 
                 <p class="mb-2 d-flex align-items-center gap-2">
                     <i data-feather="phone"></i>
-                    0812-3456-7890
+                    0877-4299-3832
                 </p>
 
                 <!-- INSTAGRAM LINK -->
@@ -73,7 +73,7 @@
                     <a href="https://www.instagram.com/brewok_kopi/" 
                        target="_blank" 
                        class="footer-link">
-                        @brewok_kopi
+                        @brew.ok
                     </a>
                 </p>
 

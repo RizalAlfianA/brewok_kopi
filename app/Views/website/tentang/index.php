@@ -136,22 +136,22 @@
 
                     <p class="mb-3 d-flex align-items-center gap-2">
                         <i data-feather="map-pin"></i>
-                        Jl. Contoh No. 123
+                        Jl. U. Sutaatmadja, Sukagalih 1
                     </p>
 
                     <p class="mb-3 d-flex align-items-center gap-2">
                         <i data-feather="clock"></i>
-                        08.00 - 23.00
+                        13.00 - 01.00
                     </p>
 
                     <p class="mb-3 d-flex align-items-center gap-2">
                         <i data-feather="phone"></i>
-                        0812-3456-7890
+                        0877-4299-3832
                     </p>
 
                     <p class="mb-0 d-flex align-items-center gap-2">
                         <i data-feather="instagram"></i>
-                        @brewokkopi
+                        @brew.ok
                     </p>
 
                 </div>
@@ -179,7 +179,7 @@
                     </p>
 
                     <a 
-                        href="https://wa.me/6281234567890?text=Halo%20Brewok%20Kopi,%20saya%20ingin%20reservasi%20tempat"
+                        href="https://wa.me/6287742993832"
                         target="_blank"
                         class="btn btn-dark btn-lg d-inline-flex justify-content-center align-items-center gap-2"
                     >

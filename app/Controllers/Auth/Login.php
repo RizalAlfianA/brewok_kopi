@@ -7,6 +7,15 @@ use App\Models\UserModel;
 
 class Login extends BaseController
 {
+    protected $userModel;
+    protected $session;
+
+    public function __construct()
+    {
+        $this->userModel = new UserModel();
+        $this->session   = session();
+    }
+
     public function index()
     {
         return view('auth/sign-in');
@@ -14,13 +23,11 @@ class Login extends BaseController
 
     public function process()
     {
-        $session   = session();
-        $userModel = new UserModel();
-
         $email    = $this->request->getPost('email');
         $password = $this->request->getPost('password');
 
         // ================= VALIDASI INPUT =================
+
         if (empty($email)) {
             return redirect()->back()->with('error', 'Email belum diisi');
         }
@@ -30,45 +37,57 @@ class Login extends BaseController
         }
 
         // ================= CEK USER =================
-        $user = $userModel->where('email', $email)->first();
 
-        if ($user) {
+        $user = $this->userModel
+            ->where('email', $email)
+            ->first();
 
-            // ================= CEK PASSWORD =================
-            if (password_verify($password, $user['password'])) {
-
-                $sessionData = [
-                    'id_user'   => $user['id_user'],
-                    'nama'      => $user['nama'],
-                    'role'      => $user['role'],
-                    'logged_in' => true
-                ];
-
-                $session->set($sessionData);
-
-                // ================= REDIRECT ROLE =================
-                if ($user['role'] == 'admin') {
-                    return redirect()->to('/admin/dashboard');
-
-                } elseif ($user['role'] == 'kasir') {
-                    return redirect()->to('/kasir/pos');
-
-                } elseif ($user['role'] == 'owner') {
-                    return redirect()->to('/owner/dashboard');
-                }
-
-            } else {
-                return redirect()->back()->with('error', 'Password salah');
-            }
-
-        } else {
+        if (!$user) {
             return redirect()->back()->with('error', 'Email tidak ditemukan');
+        }
+
+        // ================= CEK PASSWORD =================
+
+        if (!password_verify($password, $user['password'])) {
+            return redirect()->back()->with('error', 'Password salah');
+        }
+
+        // ================= SET SESSION =================
+
+        $sessionData = [
+            'id_user'   => $user['id_user'],
+            'nama'      => $user['nama'],
+            'role'      => $user['role'],
+            'logged_in' => true
+        ];
+
+        $this->session->set($sessionData);
+
+        // ================= REDIRECT ROLE =================
+
+        switch ($user['role']) {
+
+            case 'admin':
+                return redirect()->to('/admin/dashboard');
+
+            case 'kasir':
+                return redirect()->to('/kasir/pos');
+
+            case 'owner':
+                return redirect()->to('/owner/dashboard');
+
+            default:
+                return redirect()->back()->with(
+                    'error',
+                    'Role pengguna tidak dikenali'
+                );
         }
     }
 
     public function logout()
     {
-        session()->destroy();
+        $this->session->destroy();
+
         return redirect()->to('/login');
     }
 }

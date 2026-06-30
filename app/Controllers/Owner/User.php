@@ -26,21 +26,25 @@ class User extends BaseController
 
     public function create()
     {
-        return view('owner/user/create', [
+        $data = [
             'title' => 'Tambah User'
-        ]);
+        ];
+
+        return view('owner/user/create', $data);
     }
 
     public function store()
     {
+        // ================= SIMPAN USER =================
+
         $this->user->insert([
-            'nama' => $this->request->getPost('nama'),
-            'email' => $this->request->getPost('email'),
+            'nama'     => $this->request->getPost('nama'),
+            'email'    => $this->request->getPost('email'),
             'password' => password_hash(
                 $this->request->getPost('password'),
                 PASSWORD_DEFAULT
             ),
-            'role' => $this->request->getPost('role')
+            'role'     => $this->request->getPost('role')
         ]);
 
         return redirect()->to('/owner/user');
@@ -50,7 +54,7 @@ class User extends BaseController
     {
         $data = [
             'title' => 'Edit User',
-            'user' => $this->user->find($id)
+            'user'  => $this->user->find($id)
         ];
 
         return view('owner/user/edit', $data);
@@ -59,17 +63,22 @@ class User extends BaseController
     public function update($id)
     {
         $data = [
-            'nama' => $this->request->getPost('nama'),
+            'nama'  => $this->request->getPost('nama'),
             'email' => $this->request->getPost('email'),
-            'role' => $this->request->getPost('role')
+            'role'  => $this->request->getPost('role')
         ];
 
+        // ================= UPDATE PASSWORD =================
+
         if ($this->request->getPost('password')) {
+
             $data['password'] = password_hash(
                 $this->request->getPost('password'),
                 PASSWORD_DEFAULT
             );
         }
+
+        // ================= UPDATE USER =================
 
         $this->user->update($id, $data);
 

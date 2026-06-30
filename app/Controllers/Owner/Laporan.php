@@ -19,102 +19,101 @@ class Laporan extends BaseController
 
     public function index()
     {
+        $laporan = $this->getLaporan();
+
         $data = [
-            'title' => 'Laporan Bisnis'
+            'title'           => 'Laporan Bisnis',
+            'laporan'         => $laporan,
+            'total'           => array_sum(array_column($laporan, 'total')),
+            'tanggal_awal'    => $this->request->getGet('tanggal_awal'),
+            'tanggal_akhir'   => $this->request->getGet('tanggal_akhir')
         ];
-
-        $tanggal_awal = $this->request->getGet('tanggal_awal');
-        $tanggal_akhir = $this->request->getGet('tanggal_akhir');
-
-        if ($tanggal_awal && $tanggal_akhir) {
-            $data['laporan'] = $this->pesanan
-                ->where('DATE(tanggal) >=', $tanggal_awal)
-                ->where('DATE(tanggal) <=', $tanggal_akhir)
-                ->findAll();
-        } else {
-            $data['laporan'] = $this->pesanan
-                ->orderBy('tanggal', 'DESC')
-                ->findAll();
-        }
-
-        $data['total'] = array_sum(array_column($data['laporan'], 'total'));
 
         return view('owner/laporan/index', $data);
     }
 
     public function exportPdf()
     {
-        $tanggal_awal  = $this->request->getGet('tanggal_awal');
-        $tanggal_akhir = $this->request->getGet('tanggal_akhir');
+        $laporan = $this->getLaporan();
 
-        if ($tanggal_awal && $tanggal_akhir) {
-
-            $laporan = $this->pesanan
-                ->where('DATE(tanggal) >=', $tanggal_awal)
-                ->where('DATE(tanggal) <=', $tanggal_akhir)
-                ->findAll();
-
-        } else {
-
-            $laporan = $this->pesanan
-                ->orderBy('tanggal', 'DESC')
-                ->findAll();
-        }
-
-        $data['laporan'] = $laporan;
-        $data['total']   = array_sum(array_column($laporan, 'total'));
+        $data = [
+            'laporan' => $laporan,
+            'total'   => array_sum(array_column($laporan, 'total'))
+        ];
 
         $html = view('owner/laporan/pdf', $data);
 
-        $dompdf = new \Dompdf\Dompdf();
+        // ================= GENERATE PDF =================
+
+        $dompdf = new Dompdf();
+
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
-        $dompdf->stream("laporan.pdf", ["Attachment" => false]);
+
+        $dompdf->stream('laporan.pdf', [
+            'Attachment' => false
+        ]);
     }
 
     public function exportExcel()
     {
-        $tanggal_awal  = $this->request->getGet('tanggal_awal');
-        $tanggal_akhir = $this->request->getGet('tanggal_akhir');
+        $laporan = $this->getLaporan();
 
-        if ($tanggal_awal && $tanggal_akhir) {
+        // ================= SPREADSHEET =================
 
-            $laporan = $this->pesanan
-                ->where('DATE(tanggal) >=', $tanggal_awal)
-                ->where('DATE(tanggal) <=', $tanggal_akhir)
-                ->findAll();
-
-        } else {
-
-            $laporan = $this->pesanan
-                ->orderBy('tanggal', 'DESC')
-                ->findAll();
-        }
-
-        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
+
+        // ================= HEADER =================
 
         $sheet->setCellValue('A1', 'No');
         $sheet->setCellValue('B1', 'Tanggal');
         $sheet->setCellValue('C1', 'Total');
 
+        // ================= DATA =================
+
         $row = 2;
-        $no = 1;
+        $no  = 1;
 
         foreach ($laporan as $l) {
+
             $sheet->setCellValue('A' . $row, $no++);
             $sheet->setCellValue('B' . $row, $l['tanggal']);
             $sheet->setCellValue('C' . $row, $l['total']);
+
             $row++;
         }
 
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        // ================= EXPORT EXCEL =================
+
+        $writer = new Xlsx($spreadsheet);
 
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="laporan.xlsx"');
         header('Cache-Control: max-age=0');
 
         $writer->save('php://output');
+    }
+
+    // ================= FUNCTION FILTER LAPORAN =================
+
+    private function getLaporan()
+    {
+        $tanggal_awal  = $this->request->getGet('tanggal_awal');
+        $tanggal_akhir = $this->request->getGet('tanggal_akhir');
+
+        if ($tanggal_awal && $tanggal_akhir) {
+
+            return $this->pesanan
+                ->where('DATE(tanggal) >=', $tanggal_awal)
+                ->where('DATE(tanggal) <=', $tanggal_akhir)
+                ->orderBy('tanggal', 'DESC')
+                ->findAll();
+        }
+
+        return $this->pesanan
+            ->orderBy('tanggal', 'DESC')
+            ->findAll();
     }
 }

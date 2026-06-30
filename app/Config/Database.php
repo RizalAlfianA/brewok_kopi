@@ -26,10 +26,10 @@ class Database extends Config
      */
     public array $default = [
         'DSN'          => '',
-        'hostname'     => 'localhost',
-        'username'     => 'root',
-        'password'     => '',
-        'database'     => 'brewok_kopi',
+        'hostname'     => 'sql208.infinityfree.com',
+        'username'     => 'if0_41648661',
+        'password'     => 'Rk9onmbmaKXuXBo',
+        'database'     => 'if0_41648661_brewok_kopi',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,

@@ -169,7 +169,7 @@ function showDetail(nama, harga, deskripsi, gambar){
     document.getElementById("modal-deskripsi").innerText = deskripsi
     document.getElementById("modal-gambar").src = gambar
 
-    let nomor = "6283127528729"
+let nomor = "6287742993832"
 
     let pesan = `Halo Brewok Kopi, saya ingin pesan ${nama}`
 

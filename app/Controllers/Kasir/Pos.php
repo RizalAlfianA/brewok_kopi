@@ -4,66 +4,75 @@ namespace App\Controllers\Kasir;
 
 use App\Controllers\BaseController;
 use App\Models\MenuModel;
+use App\Models\KategoriModel;
 use App\Models\PesananModel;
 use App\Models\DetailPesananModel;
 
 class Pos extends BaseController
 {
     protected $menu;
+    protected $kategori;
+    protected $pesanan;
+    protected $detailPesanan;
 
     public function __construct()
     {
-        $this->menu = new MenuModel();
+        $this->menu          = new MenuModel();
+        $this->kategori      = new KategoriModel();
+        $this->pesanan       = new PesananModel();
+        $this->detailPesanan = new DetailPesananModel();
     }
 
     public function index()
     {
         $data = [
-            'title' => 'POS Kasir'
+            'title'    => 'POS Kasir',
+            'menu'     => $this->menu->getMenuKategori(),
+            'kategori' => $this->kategori->findAll()
         ];
-
-        $data['menu'] = $this->menu->getMenuKategori();
 
         return view('kasir/pos/index', $data);
     }
 
     public function simpan()
     {
-        $pesananModel = new PesananModel();
-        $detailModel = new DetailPesananModel();
+        // ================= AMBIL DATA JSON =================
 
         $data = $this->request->getJSON();
 
         $total = $data->total;
-        $bayar = $data->bayar;
-        $kembalian = $data->kembalian;
         $items = $data->items;
 
         $id_user = session()->get('id_user');
 
-        $pesananModel->insert([
+        // ================= SIMPAN PESANAN =================
+
+        $this->pesanan->insert([
             'tanggal' => date('Y-m-d H:i:s'),
-            'total' => $total,
-            'bayar' => $bayar,
-            'kembalian' => $kembalian,
+            'total'   => $total,
             'id_user' => $id_user
         ]);
 
-        $id_pesanan = $pesananModel->insertID();
+        $id_pesanan = $this->pesanan->insertID();
+
+        // ================= SIMPAN DETAIL PESANAN =================
 
         foreach ($items as $item) {
 
-            $detailModel->insert([
+            $this->detailPesanan->insert([
                 'id_pesanan' => $id_pesanan,
-                'id_menu' => $item->id,
-                'qty' => $item->qty,
-                'harga' => $item->harga,
-                'subtotal' => $item->subtotal
+                'id_menu'    => $item->id,
+                'qty'        => $item->qty,
+                'harga'      => $item->harga,
+                'subtotal'   => $item->subtotal
             ]);
         }
 
+        // ================= RESPONSE =================
+
         return $this->response->setJSON([
-            'status' => 'success'
+            'status'     => 'success',
+            'id_pesanan' => $id_pesanan
         ]);
     }
 }

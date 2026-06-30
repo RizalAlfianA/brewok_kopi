@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gensart | Login</title>
+    <title>Brewok Kopi </title>
+    <link rel="icon" type="image/jpeg" href="<?= base_url('assets/img/logo/Logo.jpeg?v=<?= time() ?>'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/app.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/app-dark.css'); ?>">
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
@@ -71,6 +72,69 @@
         html[data-bs-theme="dark"] #auth-right {
             background: url(./png/4853433.png), linear-gradient(90deg, #2d499d, #3f5491);
         }
+
+        .auth-logo-img {
+            max-width: 100%;
+            height: auto;
+            max-height: 240px;
+            object-fit: contain;
+        }
+
+        @media screen and (max-width: 768px) {
+
+            .auth-logo-img {
+                max-height: 180px;
+            }
+
+            #auth #auth-left {
+                padding: 3rem 2rem;
+            }
+
+            #auth #auth-left h1 {
+                font-size: 2rem;
+            }
+
+            #auth #auth-left .auth-subtitle {
+                font-size: 1rem;
+                line-height: 1.8rem;
+            }
+        }
+
+        @media screen and (max-width: 576px) {
+
+            .auth-logo-img {
+                max-height: 140px;
+            }
+
+            #auth #auth-left {
+                padding: 2rem 1.5rem;
+            }
+        }
+        @media screen and (max-width: 991px) {
+
+            #auth-right {
+                min-height: auto;
+                padding: 2rem 1rem !important;
+            }
+
+            #auth-right .card {
+                margin-top: 2rem;
+            }
+
+            #auth-right .card-body {
+                padding: 1.5rem;
+            }
+
+            #auth-right .card-title {
+                font-size: 1.2rem;
+            }
+
+            #auth-right .card-text,
+            #auth-right p {
+                font-size: 0.95rem;
+                line-height: 1.6rem;
+            }
+        }
     </style>
     <script src="<?= base_url('assets/js/init-theme.js'); ?>"></script>
 </head>
@@ -80,9 +144,14 @@
         <div class="row h-100">
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
-                    <div class="mb-5">
+                    <div class="mb-5 text-center text-lg-start">
                         <a href="#">
-                            <img src="<?= base_url('assets/img/logo/Logo.jpeg'); ?>" alt="Logo" style="height:240px;" loading="lazy">
+                            <img 
+                                src="<?= base_url('assets/img/logo/Logo.jpeg'); ?>" 
+                                alt="Logo Brewok Kopi"
+                                class="img-fluid auth-logo-img"
+                                loading="lazy"
+                                >
                         </a>
                     </div>
                     <h1>Brewok Kopi</h1>
@@ -113,7 +182,7 @@
                     </form>
                 </div>
             </div>
-            <div class="col-lg-7 d-none d-lg-block">
+            <div class="col-lg-7 d-block">
                 <div id="auth-right" class="p-md-5 p-3">
                     <div class="d-flex align-items-center h-75">
                         <div class="card my-3 w-100">

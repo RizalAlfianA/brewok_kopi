@@ -4,39 +4,24 @@ namespace App\Controllers\Website;
 
 use App\Controllers\BaseController;
 use App\Models\MenuModel;
+use App\Models\KategoriModel;
 
 class Menu extends BaseController
 {
-
     protected $menu;
+    protected $kategori;
 
     public function __construct()
     {
-        $this->menu = new MenuModel();
+        $this->menu      = new MenuModel();
+        $this->kategori  = new KategoriModel();
     }
 
     public function index()
     {
-        $kategoriModel = new \App\Models\KategoriModel();
-        $menuModel = new \App\Models\MenuModel();
-
-        // ambil kategori
-        $kategori = $kategoriModel->findAll();
-
-        // ambil parameter filter
-        $id_kategori = $this->request->getGet('kategori');
-
-        if ($id_kategori) {
-            $menu = $menuModel
-                ->where('id_kategori', $id_kategori)
-                ->findAll();
-        } else {
-            $menu = $menuModel->findAll();
-        }
-
         $data = [
-            'kategori' => $kategori,
-            'menu'     => $menu
+            'kategori' => $this->kategori->findAll(),
+            'menu'     => $this->getMenuByKategori()
         ];
 
         return view('website/menu/index', $data);
@@ -44,22 +29,27 @@ class Menu extends BaseController
 
     public function menu()
     {
-        $kategoriModel = new \App\Models\KategoriModel();
-        $menuModel = new \App\Models\MenuModel();
-
-        $data['kategori'] = $kategoriModel->findAll();
-
-        $id_kategori = $this->request->getGet('kategori');
-
-        if ($id_kategori) {
-            $data['menu'] = $menuModel
-                ->where('id_kategori', $id_kategori)
-                ->findAll();
-        } else {
-            $data['menu'] = $menuModel->findAll();
-        }
+        $data = [
+            'kategori' => $this->kategori->findAll(),
+            'menu'     => $this->getMenuByKategori()
+        ];
 
         return view('website/menu', $data);
     }
 
+    // ================= FILTER MENU =================
+
+    private function getMenuByKategori()
+    {
+        $id_kategori = $this->request->getGet('kategori');
+
+        if ($id_kategori) {
+
+            return $this->menu
+                ->where('id_kategori', $id_kategori)
+                ->findAll();
+        }
+
+        return $this->menu->findAll();
+    }
 }
