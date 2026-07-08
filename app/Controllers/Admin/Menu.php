@@ -19,9 +19,15 @@ class Menu extends BaseController
 
     public function index()
     {
+        $keyword = $this->request->getGet('keyword');
+
+        $builder = $this->menu->getMenuKategori($keyword);
+
         $data = [
-            'title' => 'Menu Brewok Kopi',
-            'menu'  => $this->menu->getMenuKategori()
+            'title'   => 'Menu Brewok Kopi',
+            'menu'    => $builder->paginate(100),
+            'pager'   => $this->menu->pager,
+            'keyword' => $keyword
         ];
 
         return view('admin/menu/index', $data);
@@ -38,20 +44,38 @@ class Menu extends BaseController
 
     public function store()
     {
+        // ================= VALIDASI =================
+
+        $validation = \Config\Services::validation();
+
+        $rules = [
+            'gambar' => [
+                'rules' => 'permit_empty|is_image[gambar]|mime_in[gambar,image/jpg,image/jpeg,image/png,image/webp,image/gif]|max_size[gambar,2048]',
+                'errors' => [
+                    'is_image' => 'File yang dipilih harus berupa gambar.',
+                    'mime_in'  => 'Format gambar harus JPG, JPEG, PNG, WEBP, atau GIF.',
+                    'max_size' => 'Ukuran gambar maksimal 2 MB.'
+                ]
+            ]
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+        }
+
         // ================= UPLOAD GAMBAR =================
 
         $file = $this->request->getFile('gambar');
 
-        // default gambar
         $namaGambar = 'default.png';
 
-        // jika user upload gambar
-        if ($file && $file->getError() !== 4) {
+        if ($file && $file->getError() != 4) {
 
             $namaGambar = $file->getRandomName();
 
             $file->move('assets/images/menu/', $namaGambar);
         }
+
         // ================= SIMPAN DATA =================
 
         $this->menu->save([
@@ -62,7 +86,8 @@ class Menu extends BaseController
             'id_kategori' => $this->request->getPost('id_kategori')
         ]);
 
-        return redirect()->to('/admin/menu');
+        return redirect()->to('/admin/menu')
+                        ->with('success', 'Menu berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -78,21 +103,36 @@ class Menu extends BaseController
     public function update($id)
     {
         $data = [
-            'nama_menu'    => $this->request->getPost('nama_menu'),
-            'harga'        => $this->request->getPost('harga'),
-            'deskripsi'    => $this->request->getPost('deskripsi'),
-            'id_kategori'  => $this->request->getPost('id_kategori')
+            'nama_menu'   => $this->request->getPost('nama_menu'),
+            'harga'       => str_replace('.', '', $this->request->getPost('harga')),
+            'deskripsi'   => $this->request->getPost('deskripsi'),
+            'id_kategori' => $this->request->getPost('id_kategori')
         ];
 
-        // ================= UPDATE GAMBAR =================
+        // ================= VALIDASI GAMBAR =================
 
         $file = $this->request->getFile('gambar');
 
-        if ($file && $file->isValid()) {
+        if ($file && $file->getError() != 4) {
+
+            $rules = [
+                'gambar' => [
+                    'rules' => 'is_image[gambar]|mime_in[gambar,image/jpg,image/jpeg,image/png,image/webp,image/gif]|max_size[gambar,2048]',
+                    'errors' => [
+                        'is_image' => 'File yang dipilih harus berupa gambar.',
+                        'mime_in'  => 'Format gambar harus JPG, JPEG, PNG, WEBP, atau GIF.',
+                        'max_size' => 'Ukuran gambar maksimal 2 MB.'
+                    ]
+                ]
+            ];
+
+            if (!$this->validate($rules)) {
+                return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+            }
 
             $namaGambar = $file->getRandomName();
 
-            $file->move('assets/images/menu', $namaGambar);
+            $file->move('assets/images/menu/', $namaGambar);
 
             $data['gambar'] = $namaGambar;
         }
@@ -101,7 +141,8 @@ class Menu extends BaseController
 
         $this->menu->update($id, $data);
 
-        return redirect()->to('/admin/menu');
+        return redirect()->to('/admin/menu')
+                        ->with('success', 'Menu berhasil diperbarui.');
     }
 
     public function delete($id)

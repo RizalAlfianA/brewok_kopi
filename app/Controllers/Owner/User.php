@@ -16,9 +16,15 @@ class User extends BaseController
 
     public function index()
     {
+        $keyword = $this->request->getGet('keyword');
+
+        $builder = $this->user->getUser($keyword);
+
         $data = [
-            'title' => 'Manajemen User',
-            'users' => $this->user->findAll()
+            'title'   => 'Manajemen User',
+            'users'   => $builder->paginate(100),
+            'pager'   => $this->user->pager,
+            'keyword' => $keyword
         ];
 
         return view('owner/user/index', $data);

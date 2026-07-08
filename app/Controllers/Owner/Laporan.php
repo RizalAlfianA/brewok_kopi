@@ -19,14 +19,30 @@ class Laporan extends BaseController
 
     public function index()
     {
-        $laporan = $this->getLaporan();
+        $laporan = $this->getLaporanPaginate();
+
+        $tanggal_awal  = $this->request->getGet('tanggal_awal');
+        $tanggal_akhir = $this->request->getGet('tanggal_akhir');
+
+        $totalBuilder = clone $this->pesanan;
+
+        if ($tanggal_awal && $tanggal_akhir) {
+
+            $totalBuilder
+                ->where('DATE(tanggal) >=', $tanggal_awal)
+                ->where('DATE(tanggal) <=', $tanggal_akhir);
+
+        }
+
+        $total = array_sum(array_column($totalBuilder->findAll(), 'total'));
 
         $data = [
-            'title'           => 'Laporan Bisnis',
-            'laporan'         => $laporan,
-            'total'           => array_sum(array_column($laporan, 'total')),
-            'tanggal_awal'    => $this->request->getGet('tanggal_awal'),
-            'tanggal_akhir'   => $this->request->getGet('tanggal_akhir')
+            'title'          => 'Laporan Bisnis',
+            'laporan'        => $laporan,
+            'pager'          => $this->pesanan->pager,
+            'total'          => $total,
+            'tanggal_awal'   => $tanggal_awal,
+            'tanggal_akhir'  => $tanggal_akhir
         ];
 
         return view('owner/laporan/index', $data);
@@ -115,5 +131,22 @@ class Laporan extends BaseController
         return $this->pesanan
             ->orderBy('tanggal', 'DESC')
             ->findAll();
+    }
+
+    private function getLaporanPaginate()
+    {
+        $tanggal_awal  = $this->request->getGet('tanggal_awal');
+        $tanggal_akhir = $this->request->getGet('tanggal_akhir');
+
+        $builder = $this->pesanan->orderBy('tanggal', 'DESC');
+
+        if ($tanggal_awal && $tanggal_akhir) {
+
+            $builder->where('DATE(tanggal) >=', $tanggal_awal)
+                    ->where('DATE(tanggal) <=', $tanggal_akhir);
+
+        }
+
+        return $builder->paginate(100);
     }
 }

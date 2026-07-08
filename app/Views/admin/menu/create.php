@@ -8,6 +8,24 @@
 <div class="card">
 <div class="card-body">
 
+<?php if(session()->getFlashdata('errors')): ?>
+
+<div class="alert alert-danger">
+
+    <ul class="mb-0">
+
+    <?php foreach(session()->getFlashdata('errors') as $error): ?>
+
+        <li><?= esc($error) ?></li>
+
+    <?php endforeach ?>
+
+    </ul>
+
+</div>
+
+<?php endif; ?>
+
 <form action="/admin/menu/store" 
       method="post" 
       enctype="multipart/form-data"
@@ -61,12 +79,29 @@
     </div>
 
     <div class="mb-3">
+
         <label>Gambar Menu</label>
 
-        <input type="file" 
-               name="gambar" 
-               id="gambar"
-               class="form-control">
+        <input
+            type="file"
+            name="gambar"
+            id="gambar"
+            class="form-control"
+            accept="image/*">
+        
+        <img
+        id="preview"
+        src="#"
+        style="display:none;
+               max-width:200px;
+               border-radius:10px;
+               border:1px solid #ddd;
+               padding:5px;">
+
+        <small class="text-muted">
+            Format: JPG, JPEG, PNG, WEBP, GIF (Maks. 2 MB)
+        </small>
+
     </div>
 
     <button class="btn btn-success">
@@ -101,6 +136,7 @@ document.getElementById('formMenu').addEventListener('submit', function(e) {
 
     const gambar = document.getElementById('gambar').value;
 
+    // Konfirmasi jika gambar kosong
     if (!gambar) {
 
         const konfirmasi = confirm(
@@ -109,11 +145,64 @@ document.getElementById('formMenu').addEventListener('submit', function(e) {
 
         if (!konfirmasi) {
             e.preventDefault();
+            return;
         }
     }
 
-    // hapus titik sebelum submit
+    // Validasi format gambar
+    const fileInput = document.getElementById('gambar');
+
+    const preview = document.getElementById('preview');
+
+    fileInput.addEventListener('change', function(){
+
+        const file = this.files[0];
+
+        preview.style.display = "none";
+
+        if(!file) return;
+
+        const allowed = [
+            'image/jpeg',
+            'image/jpg',
+            'image/png',
+            'image/webp',
+            'image/gif'
+        ];
+
+        if(!allowed.includes(file.type)){
+
+            alert("File harus berupa gambar (JPG, JPEG, PNG, WEBP, atau GIF).");
+
+            this.value = "";
+
+            return;
+        }
+
+        if(file.size > 2 * 1024 * 1024){
+
+            alert("Ukuran gambar maksimal 2 MB.");
+
+            this.value = "";
+
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function(e){
+
+            preview.src = e.target.result;
+
+            preview.style.display = "block";
+
+        }
+
+        reader.readAsDataURL(file);
+
+    // Hapus format titik sebelum dikirim
     hargaInput.value = hargaInput.value.replace(/\./g, '');
+
 });
 
 </script>

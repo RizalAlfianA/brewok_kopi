@@ -27,7 +27,7 @@ class Pos extends BaseController
     {
         $data = [
             'title'    => 'POS Kasir',
-            'menu'     => $this->menu->getMenuKategori(),
+            'menu'     => $this->menu->getMenuKategori()->findAll(),
             'kategori' => $this->kategori->findAll()
         ];
 

@@ -119,7 +119,9 @@
 
                 <div class="row g-3">
 
-                    <?php foreach($menu as $m): ?>
+                    <?php foreach ($menu as $m): ?>
+
+                    <?php if (!$m) continue; ?>
 
                     <div
                         class="col-lg-3 col-md-4 col-6 menu-item"
@@ -230,41 +232,75 @@
 
 <!-- STRUK -->
 
-<div
-    id="struk"
-    style="display:none; font-family: monospace; width:300px;"
->
+<div id="struk" style="display:none;">
 
-    <h4 style="text-align:center;">
-        Brewok Kopi
-    </h4>
+    <div class="thermal">
 
-    <hr>
+        <div class="center">
 
-    <div id="struk-items"></div>
+            <h3>BREWOK KOPI</h3>
 
-    <hr>
+            <small>
+                Jl. U. Sutaatmadja, Sukagalih 1
+                <br>
+                Telp. 087742993832
+            </small>
 
-    <p>
-        Total :
-        Rp <span id="struk-total"></span>
-    </p>
+        </div>
 
-    <p>
-        Bayar :
-        Rp <span id="struk-bayar"></span>
-    </p>
+        <hr>
 
-    <p>
-        Kembali :
-        Rp <span id="struk-kembali"></span>
-    </p>
+        <div id="struk-items"></div>
 
-    <hr>
+        <hr>
 
-    <p style="text-align:center;">
-        Terima Kasih ☕
-    </p>
+        <table width="100%">
+
+            <tr>
+
+                <td>Total</td>
+
+                <td align="right">
+                    Rp <span id="struk-total"></span>
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td>Bayar</td>
+
+                <td align="right">
+                    Rp <span id="struk-bayar"></span>
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td>Kembali</td>
+
+                <td align="right">
+                    Rp <span id="struk-kembali"></span>
+                </td>
+
+            </tr>
+
+        </table>
+
+        <hr>
+
+        <div class="center">
+
+            Terima Kasih ☕
+
+            <br>
+
+            Selamat Menikmati
+
+        </div>
+
+    </div>
 
 </div>
 
@@ -600,10 +636,35 @@ function cetakStruk(data)
     data.items.forEach(item => {
 
         itemsHTML += `
-        <p>
-            ${item.nama} x${item.qty}<br>
-            Rp ${item.subtotal.toLocaleString('id-ID')}
-        </p>`;
+            <table width="100%" style="font-size:11px;margin-bottom:4px;">
+
+                <tr>
+
+                    <td colspan="2">
+                        ${item.nama}
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>
+
+                        ${item.qty} x Rp ${item.harga.toLocaleString('id-ID')}
+
+                    </td>
+
+                    <td align="right">
+
+                        Rp ${item.subtotal.toLocaleString('id-ID')}
+
+                    </td>
+
+                </tr>
+
+            </table>
+        `;
+
     });
 
     document.getElementById("struk-items").innerHTML = itemsHTML;
@@ -617,15 +678,108 @@ function cetakStruk(data)
     document.getElementById("struk-kembali").innerText =
         data.kembalian.toLocaleString('id-ID');
 
-    let win = window.open('', '', 'width=400,height=600');
+    let win = window.open('', '', 'width=300,height=700');
 
     win.document.write(`
-        <body onload="window.print(); window.close();">
-            ${document.getElementById("struk").innerHTML}
-        </body>
-    `);
+
+<html>
+
+<head>
+
+<title>Struk</title>
+
+<style>
+
+@page{
+
+    size:58mm auto;
+
+    margin:2mm;
+
+}
+
+body{
+
+    width:58mm;
+
+    margin:0;
+
+    padding:0;
+
+    font-family:monospace;
+
+    font-size:11px;
+
+}
+
+.thermal{
+
+    width:100%;
+
+}
+
+.center{
+
+    text-align:center;
+
+}
+
+hr{
+
+    border:none;
+
+    border-top:1px dashed black;
+
+    margin:5px 0;
+
+}
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+td{
+
+    font-size:11px;
+
+    padding:1px 0;
+
+}
+
+h3{
+
+    margin:0;
+
+    font-size:16px;
+
+}
+
+small{
+
+    font-size:10px;
+
+}
+
+</style>
+
+</head>
+
+<body onload="window.print();window.close();">
+
+${document.getElementById("struk").innerHTML}
+
+</body>
+
+</html>
+
+`);
 
     win.document.close();
+
 }
 
 // ================= AUTO FOCUS =================

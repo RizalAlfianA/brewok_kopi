@@ -16,9 +16,15 @@ class Kategori extends BaseController
 
     public function index()
     {
+        $keyword = $this->request->getGet('keyword');
+
+        $builder = $this->kategori->getKategori($keyword);
+
         $data = [
             'title'     => 'Kategori Menu',
-            'kategori'  => $this->kategori->findAll()
+            'kategori'  => $builder->paginate(100),
+            'pager'     => $this->kategori->pager,
+            'keyword'   => $keyword
         ];
 
         return view('admin/kategori/index', $data);

@@ -1,6 +1,25 @@
 <?= $this->extend('layout/base'); ?>
 <?= $this->section('content'); ?>
 
+<form method="get" class="row mb-3">
+
+    <div class="col-md-4">
+        <input
+            type="text"
+            name="keyword"
+            class="form-control"
+            placeholder="Cari kategori..."
+            value="<?= esc($keyword ?? '') ?>">
+    </div>
+
+    <div class="col-md-2">
+        <button class="btn btn-primary">
+            Cari
+        </button>
+    </div>
+
+</form>
+
 <a href="/admin/kategori/create" class="btn btn-primary mb-3">
 Tambah Kategori
 </a>
@@ -16,7 +35,12 @@ Tambah Kategori
 
 <tbody>
 
-<?php $no=1; foreach($kategori as $k): ?>
+<?php
+$page = $_GET['page'] ?? 1;
+$no = 1 + (100 * ($page - 1));
+
+foreach($kategori as $k):
+?>
 
 <tr>
 <td><?= $no++ ?></td>
@@ -28,7 +52,7 @@ Tambah Kategori
 Edit
 </a>
 
-<a href="/admin/menu/delete/<?= $k['id_kategori']; ?>" 
+<a href="/admin/kategori/delete/<?= $k['id_kategori']; ?>" 
    onclick="return confirm('Yakin ingin menghapus kategori menu <?= $k['nama_kategori']; ?>?')"
    class="btn btn-danger btn-sm">
    Hapus
@@ -41,5 +65,9 @@ Edit
 
 </tbody>
 </table>
+
+<div class="mt-3">
+    <?= $pager->links() ?>
+</div>
 
 <?= $this->endSection(); ?>

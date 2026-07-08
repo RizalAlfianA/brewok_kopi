@@ -1,6 +1,25 @@
 <?= $this->extend('layout/base'); ?>
 <?= $this->section('content'); ?>
 
+<form method="get" class="row mb-3">
+
+    <div class="col-md-4">
+        <input
+            type="text"
+            name="keyword"
+            class="form-control"
+            placeholder="Cari nama, email, atau role..."
+            value="<?= esc($keyword ?? '') ?>">
+    </div>
+
+    <div class="col-md-2">
+        <button class="btn btn-primary">
+            Cari
+        </button>
+    </div>
+
+</form>
+
 <a href="/owner/user/create" class="btn btn-primary mb-3">
 Tambah User
 </a>
@@ -15,7 +34,12 @@ Tambah User
 <th>Aksi</th>
 </tr>
 
-<?php $no=1; foreach($users as $u): ?>
+<?php
+$page = $_GET['page'] ?? 1;
+$no = 1 + (100 * ($page - 1));
+
+foreach($users as $u):
+?>
 
 <tr>
 
@@ -30,7 +54,7 @@ Tambah User
 Edit
 </a>
 
-<a href="/admin/menu/delete/<?= $u['id_user']; ?>" 
+<a href="/owner/user/delete/<?= $u['id_user']; ?>"
    onclick="return confirm('Yakin ingin menghapus user <?= $u['nama']; ?>?')"
    class="btn btn-danger btn-sm">
    Hapus

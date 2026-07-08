@@ -6,10 +6,10 @@ use CodeIgniter\Model;
 
 class MenuModel extends Model
 {
-    protected $table            = 'menu';
-    protected $primaryKey       = 'id_menu';
+    protected $table      = 'menu';
+    protected $primaryKey = 'id_menu';
 
-    protected $allowedFields    = [
+    protected $allowedFields = [
         'nama_menu',
         'harga',
         'deskripsi',
@@ -17,14 +17,20 @@ class MenuModel extends Model
         'id_kategori'
     ];
 
-    protected $returnType       = 'array';
+    protected $returnType = 'array';
 
-    public function getMenuKategori()
+    public function getMenuKategori($keyword = null)
     {
-        return $this->db->table($this->table)
-            ->select('menu.*, kategori.nama_kategori')
-            ->join('kategori', 'kategori.id_kategori = menu.id_kategori')
-            ->get()
-            ->getResultArray();
+        $builder = $this->select('menu.*, kategori.nama_kategori')
+                        ->join('kategori', 'kategori.id_kategori = menu.id_kategori');
+
+        if ($keyword) {
+            $builder->groupStart()
+                    ->like('menu.nama_menu', $keyword)
+                    ->orLike('kategori.nama_kategori', $keyword)
+                    ->groupEnd();
+        }
+
+        return $builder;
     }
 }

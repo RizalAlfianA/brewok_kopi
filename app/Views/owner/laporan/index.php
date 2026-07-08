@@ -4,11 +4,19 @@
 <form method="get" class="row mb-3">
 
     <div class="col-md-3">
-        <input type="date" name="tanggal_awal" class="form-control">
+        <input
+            type="date"
+            name="tanggal_awal"
+            value="<?= $tanggal_awal ?>"
+            class="form-control">
     </div>
 
     <div class="col-md-3">
-        <input type="date" name="tanggal_akhir" class="form-control">
+        <input
+            type="date"
+            name="tanggal_akhir"
+            value="<?= $tanggal_akhir ?>"
+            class="form-control">
     </div>
 
     <div class="col-md-2">
@@ -39,7 +47,12 @@
         <th>Total</th>
     </tr>
 
-    <?php $no = 1; foreach ($laporan as $l): ?>
+    <?php
+    $page = $_GET['page'] ?? 1;
+    $no = 1 + (100 * ($page - 1));
+
+    foreach ($laporan as $l):
+    ?>
 
     <tr>
         <td><?= $no++ ?></td>
@@ -50,6 +63,10 @@
     <?php endforeach; ?>
 
 </table>
+
+<div class="mt-3">
+    <?= $pager->links() ?>
+</div>
 
 <h4>Total Omzet : Rp <?= number_format($total, 0, ',', '.') ?></h4>
 
